@@ -1,0 +1,55 @@
+The 8 Plots You'll Use 90% of the Time
+Plot 1 — Histogram (distribution of one numerical column)
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Basic
+sns.histplot(df_diabetes_clean['Glucose'], bins=30)
+plt.title('Glucose Distribution')
+plt.show()
+
+# With KDE curve (smoothed distribution line)
+sns.histplot(df_diabetes_clean['Glucose'], bins=30, 
+             kde=True, color='steelblue')
+plt.title('Glucose Distribution with KDE')
+plt.show()
+
+# Split by target — most useful version
+sns.histplot(data=df_diabetes_clean, x='Glucose', 
+             hue='Outcome', bins=30, kde=True)
+plt.title('Glucose Distribution by Diabetes Outcome')
+plt.show()
+
+When to use: Understanding distribution of a single feature. Always your first plot on any new column
+
+Plot 2 — Boxplot (distribution + outliers)
+
+# Single column
+sns.boxplot(df_diabetes_clean['BMI'])
+plt.title('BMI Distribution')
+plt.show()
+
+# vs Target — your most used version in EDA
+sns.boxplot(data=df_diabetes_clean, x='Outcome', y='BMI')
+plt.title('BMI by Diabetes Outcome')
+plt.xticks([0, 1], ['No Diabetes', 'Diabetes'])
+plt.show()
+
+# All numerical columns at once
+fig, axes = plt.subplots(2, 4, figsize=(16, 8))
+axes = axes.flatten()
+
+cols = ['Glucose', 'BMI', 'Age', 'Pregnancies',
+        'Insulin', 'BloodPressure', 
+        'SkinThickness', 'DiabetesPedigreeFunction']
+
+for i, col in enumerate(cols):
+    sns.boxplot(data=df_diabetes_clean, 
+                x='Outcome', y=col, ax=axes[i])
+    axes[i].set_title(col)
+    axes[i].set_xlabel('')
+
+plt.suptitle('All Features vs Diabetes Outcome', y=1.02)
+plt.tight_layout()
+plt.show()
